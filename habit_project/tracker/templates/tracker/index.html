@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Habits / Tasks</h1>
+
+    <!-- Add new task form -->
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Enter new task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Task List -->
+    <ul>
+        {% for task in tasks %}
+            <li class="{% if task.completed %}completed{% endif %}">
+                {{ task.title }}
+                
+                {% if not task.completed %}
+                    <a href="{% url 'complete_task' task.id %}">✔</a>  <!-- Mark task as complete -->
+                {% endif %}
+                
+                <a href="{% url 'delete_task' task.id %}">❌</a>  <!-- Delete task -->
+            </li>
+        {% empty %}
+            <li>No tasks yet!</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
